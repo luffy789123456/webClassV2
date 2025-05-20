@@ -156,11 +156,11 @@ const ratingValue = document.getElementById("rating-value");
 const ratingImg = document.getElementById("rating-img");
 
 const ratingImages = [
-  "/image/src/angry.svg",
-  "/image/src/frown.svg",
-  "/image/src/meh.svg",
-  "/image/src/suprise.svg",
-  "/image/src/grin-star.svg",
+  "./image/src/angry.svg",
+  "./image/src/frown.svg",
+  "./image/src/meh.svg",
+  "./image/src/suprise.svg",
+  "./image/src/grin-star.svg",
 ];
 
 // Load from localStorage if exists
