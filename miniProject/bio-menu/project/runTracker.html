@@ -1,0 +1,814 @@
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RunTracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        :root {
+            --color-primary-light: #38bdf8;
+            --color-primary: #0ea5e9;
+            --color-primary-dark: #0284c7;
+ 
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-400: #9ca3af;
+            --color-gray-500: #6b7280;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --color-gray-900: #111827;
+ 
+            --color-red-500: #ef4444;
+            --color-red-600: #dc2626;
+ 
+            --color-white: #ffffff;
+            --color-black: #000000;
+        }
+ 
+ 
+        :root {
+            --bg-color: var(--color-gray-100);
+            --text-color: var(--color-gray-800);
+            --text-muted: var(--color-gray-500);
+            --card-bg: var(--color-white);
+            --stat-bg: var(--color-gray-100);
+            --border-color: var(--color-gray-200);
+            --btn-secondary-bg: var(--color-gray-200);
+            --btn-secondary-text: var(--color-gray-800);
+            --btn-secondary-hover-bg: var(--color-gray-300);
+            --btn-primary-bg: var(--color-primary);
+            --btn-primary-hover-bg: var(--color-primary-dark);
+            --btn-danger-bg: var(--color-red-500);
+            --btn-danger-hover-bg: var(--color-red-600);
+            --btn-disabled-opacity: 0.5;
+            --btn-disabled-cursor: not-allowed;
+            --hover-bg-light: var(--color-gray-50);
+        }
+ 
+ 
+        .dark {
+            --bg-color: var(--color-gray-900);
+            --text-color: var(--color-gray-200);
+            --text-muted: var(--color-gray-400);
+            --card-bg: var(--color-gray-800);
+            --stat-bg: var(--color-gray-900);
+            --border-color: var(--color-gray-700);
+            --btn-secondary-bg: var(--color-gray-700);
+            --btn-secondary-text: var(--color-gray-300);
+            --btn-secondary-hover-bg: var(--color-gray-600);
+            --btn-primary-bg: var(--color-primary);
+            --btn-primary-hover-bg: var(--color-primary-dark);
+            --btn-danger-bg: var(--color-red-500);
+            --btn-danger-hover-bg: var(--color-red-600);
+            --btn-disabled-opacity: 0.5;
+            --btn-disabled-cursor: not-allowed;
+            --hover-bg-light: var(--color-gray-800);
+        }
+ 
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+ 
+        .container {
+            max-width: 48rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+ 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+ 
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--btn-primary-bg);
+            user-select: none;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+ 
+        button#theme-toggle {
+            background-color: var(--btn-secondary-bg);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            outline-offset: 2px;
+        }
+        button#theme-toggle:focus {
+            outline: 2px solid var(--btn-primary-bg);
+            outline-offset: 2px;
+        }
+        button#theme-toggle svg {
+            height: 1.5rem;
+            width: 1.5rem;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+        button#theme-toggle svg.dark-hidden {
+            display: block;
+        }
+        button#theme-toggle svg.dark-visible {
+            display: none;
+        }
+        .dark button#theme-toggle svg.dark-hidden {
+            display: none;
+        }
+        .dark button#theme-toggle svg.dark-visible {
+            display: block;
+        }
+ 
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            box-sizing: border-box;
+            margin-bottom: 2rem;
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+ 
+        .text-center {
+            text-align: center;
+        }
+ 
+        #timer {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
+ 
+        .text-muted {
+            color: var(--text-muted);
+            user-select: none;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+ 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+ 
+        .stat-card {
+            background-color: var(--stat-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+ 
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--btn-primary-bg);
+            line-height: 1.2;
+            transition: color 0.3s ease;
+        }
+ 
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            user-select: none;
+            margin-top: 0.25rem;
+            transition: color 0.3s ease;
+        }
+ 
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+ 
+        button.btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+            min-width: 6rem;
+            text-align: center;
+        }
+ 
+        button.btn:focus-visible {
+            outline: 2px solid var(--btn-primary-bg);
+            outline-offset: 2px;
+        }
+ 
+        button.btn-primary {
+            background-color: var(--btn-primary-bg);
+            color: var(--color-white);
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.4);
+        }
+        button.btn-primary:hover:not(:disabled) {
+            background-color: var(--btn-primary-hover-bg);
+            box-shadow: 0 6px 8px rgba(14, 165, 233, 0.6);
+        }
+ 
+        button.btn-secondary {
+            background-color: var(--btn-secondary-bg);
+            color: var(--btn-secondary-text);
+        }
+        button.btn-secondary:hover:not(:disabled) {
+            background-color: var(--btn-secondary-hover-bg);
+        }
+ 
+        button.btn-danger {
+            background-color: var(--btn-danger-bg);
+            color: var(--color-white);
+        }
+        button.btn-danger:hover:not(:disabled) {
+            background-color: var(--btn-danger-hover-bg);
+        }
+ 
+        button.btn-disabled {
+            opacity: var(--btn-disabled-opacity);
+            cursor: var(--btn-disabled-cursor);
+        }
+ 
+        #save-btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+ 
+        .chart-container {
+            height: 16rem;
+            position: relative;
+        }
+ 
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+ 
+        .history-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            user-select: none;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+ 
+        #clear-history-btn {
+            font-size: 0.875rem;
+            color: var(--btn-danger-bg);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+        }
+        #clear-history-btn:hover {
+            color: var(--btn-danger-hover-bg);
+        }
+        #clear-history-btn:focus-visible {
+            outline: 2px solid var(--btn-danger-bg);
+            outline-offset: 2px;
+        }
+        #clear-history-btn.hidden {
+            display: none;
+        }
+ 
+        #history-container {
+            max-height: 16rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            outline: none;
+        }
+ 
+        #no-history-message {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 1rem 0;
+            user-select: none;
+            margin: 0 auto;
+            transition: color 0.3s ease;
+        }
+ 
+        .history-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            cursor: default;
+        }
+        .history-item:focus {
+            outline: 2px solid var(--btn-primary-bg);
+            outline-offset: 2px;
+        }
+        .history-item:hover {
+            background-color: var(--hover-bg-light);
+        }
+ 
+        @media (min-width: 768px) {
+            .history-item {
+                flex-direction: row;
+                align-items: center;
+            }
+            .history-item > .history-info {
+                flex: 1;
+            }
+            .history-item > .history-stats {
+                display: flex;
+                gap: 1rem;
+                margin-top: 0;
+            }
+        }
+ 
+        .history-info .date {
+            font-weight: 600;
+            color: var(--btn-primary-bg);
+            user-select: text;
+            transition: color 0.3s ease;
+        }
+        .history-info .duration {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            user-select: text;
+            transition: color 0.3s ease;
+        }
+ 
+        .history-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            user-select: text;
+        }
+        .history-stats > div {
+            text-align: center;
+        }
+        .history-stats .value {
+            font-weight: 700;
+            transition: color 0.3s ease;
+            color: var(--btn-primary-bg);
+        }
+        .history-stats .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+ 
+        footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            user-select: none;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" role="main">
+        <header>
+            <h1>RunTracker</h1>
+            <button id="theme-toggle" aria-label="Toggle dark mode" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="dark-hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="dark-visible" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+        </header>
+ 
+        <main class="flex-grow flex flex-col gap-8">
+            <section class="card" aria-label="Run timer and stats">
+                <div class="text-center mb-6">
+                    <h2 id="timer" aria-live="polite" aria-atomic="true" class="text-6xl font-extrabold tracking-tight">00:00:00</h2>
+                    <p class="text-muted">Elapsed Time</p>
+                </div>
+ 
+                <div class="stats-grid grid grid-cols-3 gap-4 mb-6" role="region" aria-label="Run statistics">
+                    <div class="stat-card bg-[var(--stat-bg)] rounded-md p-4 flex flex-col items-center justify-center transition-colors" role="region" aria-label="Distance in kilometers">
+                        <div id="distance" class="stat-value text-2xl font-extrabold text-[var(--btn-primary-bg)] leading-tight" aria-live="polite" aria-atomic="true">0.00</div>
+                        <div class="stat-label text-sm font-medium text-[var(--text-muted)] select-none mt-1">Distance (km)</div>
+                    </div>
+                    <div class="stat-card bg-[var(--stat-bg)] rounded-md p-4 flex flex-col items-center justify-center transition-colors" role="region" aria-label="Speed in kilometers per hour">
+                        <div id="speed" class="stat-value text-2xl font-extrabold text-[var(--btn-primary-bg)] leading-tight" aria-live="polite" aria-atomic="true">0.0</div>
+                        <div class="stat-label text-sm font-medium text-[var(--text-muted)] select-none mt-1">Speed (km/h)</div>
+                    </div>
+                    <div class="stat-card bg-[var(--stat-bg)] rounded-md p-4 flex flex-col items-center justify-center transition-colors" role="region" aria-label="Calories burned">
+                        <div id="calories" class="stat-value text-2xl font-extrabold text-[var(--btn-primary-bg)] leading-tight" aria-live="polite" aria-atomic="true">0</div>
+                        <div class="stat-label text-sm font-medium text-[var(--text-muted)] select-none mt-1">Calories</div>
+                    </div>
+                </div>
+ 
+                <div class="btn-group flex flex-wrap gap-4 justify-center">
+                    <button id="start-btn" class="btn btn-primary px-6 py-2 rounded-md font-semibold cursor-pointer border-none transition-shadow shadow-md focus-visible:outline-2 focus-visible:outline-[var(--btn-primary-bg)]" type="button" aria-pressed="false">Start</button>
+                    <button id="pause-btn" class="btn btn-secondary btn-disabled px-6 py-2 rounded-md font-semibold cursor-not-allowed border-none transition-colors" type="button" disabled aria-pressed="false">Pause</button>
+                    <button id="reset-btn" class="btn btn-danger btn-disabled px-6 py-2 rounded-md font-semibold cursor-not-allowed border-none transition-colors" type="button" disabled aria-pressed="false">Reset</button>
+                </div>
+ 
+                <div class="mt-4 flex justify-center">
+                    <button id="save-btn" class="btn btn-secondary btn-disabled w-full max-w-md px-6 py-2 rounded-md font-semibold cursor-not-allowed border-none transition-colors" type="button" disabled>Save Run</button>
+                </div>
+            </section>
+ 
+            <section class="card" aria-label="Distance progress chart">
+                <h3 class="text-xl font-extrabold mb-4 select-none">Distance Progress</h3>
+                <div class="chart-container h-64 relative">
+                    <canvas id="runChart" role="img" aria-label="Line chart showing distance progress over time"></canvas>
+                </div>
+            </section>
+ 
+            <section class="card" aria-label="Run history">
+                <div class="history-header flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-extrabold select-none">Run History</h3>
+                    <button id="clear-history-btn" type="button" class="hidden text-red-600 bg-transparent border-none cursor-pointer rounded-md px-2 py-1 text-sm transition-colors hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600" aria-label="Clear all run history">Clear All</button>
+                </div>
+                <div id="history-container" tabindex="0" aria-live="polite" aria-relevant="additions removals" class="max-h-64 overflow-y-auto flex flex-col gap-3 outline-none">
+                    <p id="no-history-message" class="text-muted text-center py-4 select-none m-auto">No run history yet</p>
+                </div>
+            </section>
+        </main>
+ 
+        <footer class="mt-auto text-center text-sm text-[var(--text-muted)] select-none py-4">
+            <p>RunTracker &copy; 2025 - Your Virtual Running Partner</p>
+        </footer>
+    </div>
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const timerDisplay = document.getElementById('timer');
+            const distanceDisplay = document.getElementById('distance');
+            const speedDisplay = document.getElementById('speed');
+            const caloriesDisplay = document.getElementById('calories');
+            const themeToggle = document.getElementById('theme-toggle');
+            const clearHistoryBtn = document.getElementById('clear-history-btn');
+            const historyContainer = document.getElementById('history-container');
+            const noHistoryMessage = document.getElementById('no-history-message');
+            const RUNNING_SPEED = 8.0;
+            const CALORIES_PER_KM = 65;
+            const UPDATE_INTERVAL = 1000;
+        
+            let isRunning = false;
+            let startTime = 0;
+            let elapsedTime = 0;
+            let distance = 0;
+            let timerId = null;
+            let pausedTime = 0;
+            let chartData = {
+                labels: [],
+                distances: []
+            };
+            let runChart;
+ 
+            initTheme();
+            initChart();
+            loadHistory();
+ 
+            startBtn.addEventListener('click', startRun);
+            pauseBtn.addEventListener('click', pauseRun);
+            resetBtn.addEventListener('click', resetRun);
+            saveBtn.addEventListener('click', saveRun);
+            themeToggle.addEventListener('click', toggleTheme);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+ 
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            function toggleTheme() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+                updateChart();
+            }
+ 
+            function startRun() {
+                if (!isRunning) {
+                    isRunning = true;
+ 
+                    if (pausedTime === 0) {
+                        startTime = Date.now();
+                        chartData = {
+                            labels: ['0:00'],
+                            distances: [0]
+                        };
+                        updateChart();
+                    } else {
+                        startTime = Date.now() - pausedTime;
+                    }
+ 
+                    startBtn.disabled = true;
+                    startBtn.classList.add('btn-disabled');
+                    startBtn.setAttribute('aria-pressed', 'true');
+                    pauseBtn.disabled = false;
+                    pauseBtn.classList.remove('btn-disabled');
+                    pauseBtn.setAttribute('aria-pressed', 'false');
+                    resetBtn.disabled = false;
+                    resetBtn.classList.remove('btn-disabled');
+                    resetBtn.setAttribute('aria-pressed', 'false');
+                    saveBtn.disabled = true;
+                    saveBtn.classList.add('btn-disabled');
+                    saveBtn.setAttribute('aria-pressed', 'false');
+ 
+                    timerId = setInterval(updateStats, UPDATE_INTERVAL);
+                }
+            }
+            function pauseRun() {
+                if (isRunning) {
+                    isRunning = false;
+                    clearInterval(timerId);
+                    pausedTime = Date.now() - startTime;
+ 
+                    startBtn.disabled = false;
+                    startBtn.classList.remove('btn-disabled');
+                    startBtn.setAttribute('aria-pressed', 'false');
+                    pauseBtn.disabled = true;
+                    pauseBtn.classList.add('btn-disabled');
+                    pauseBtn.setAttribute('aria-pressed', 'true');
+                    saveBtn.disabled = false;
+                    saveBtn.classList.remove('btn-disabled');
+                    saveBtn.setAttribute('aria-pressed', 'false');
+                }
+            }
+ 
+            function resetRun() {
+                isRunning = false;
+                clearInterval(timerId);
+                startTime = 0;
+                elapsedTime = 0;
+                distance = 0;
+                pausedTime = 0;
+ 
+                timerDisplay.textContent = '00:00:00';
+                distanceDisplay.textContent = '0.00';
+                speedDisplay.textContent = '0.0';
+                caloriesDisplay.textContent = '0';
+ 
+                startBtn.disabled = false;
+                startBtn.classList.remove('btn-disabled');
+                startBtn.setAttribute('aria-pressed', 'false');
+                pauseBtn.disabled = true;
+                pauseBtn.classList.add('btn-disabled');
+                pauseBtn.setAttribute('aria-pressed', 'false');
+                resetBtn.disabled = true;
+                resetBtn.classList.add('btn-disabled');
+                resetBtn.setAttribute('aria-pressed', 'false');
+                saveBtn.disabled = true;
+                saveBtn.classList.add('btn-disabled');
+                saveBtn.setAttribute('aria-pressed', 'false');
+ 
+                chartData = {
+                    labels: ['0:00'],
+                    distances: [0]
+                };
+                updateChart();
+            }
+            function updateStats() {
+                if (isRunning) {
+                    elapsedTime = Date.now() - startTime;
+                    timerDisplay.textContent = formatTime(elapsedTime);
+ 
+                    distance = (elapsedTime / 3600000) * RUNNING_SPEED;
+                    distanceDisplay.textContent = distance.toFixed(2);
+ 
+                    let hours = elapsedTime / 3600000;
+                    let currentSpeed = hours > 0 ? distance / hours : 0;
+                    speedDisplay.textContent = currentSpeed.toFixed(1);
+ 
+                    const calories = Math.round(distance * CALORIES_PER_KM);
+                    caloriesDisplay.textContent = calories;
+ 
+                    if (elapsedTime % 30000 < 1000) {
+                        const minutes = Math.floor(elapsedTime / 60000);
+                        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+                        const timeLabel = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+ 
+                        chartData.labels.push(timeLabel);
+                        chartData.distances.push(parseFloat(distance.toFixed(2)));
+                        updateChart();
+                    }
+                }
+            }
+ 
+            function formatTime(timeInMs) {
+                const hours = Math.floor(timeInMs / 3600000);
+                const minutes = Math.floor((timeInMs % 3600000) / 60000);
+                const seconds = Math.floor((timeInMs % 60000) / 1000);
+ 
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+ 
+            function saveRun() {
+                if (distance > 0) {
+                    const runData = {
+                        id: Date.now(),
+                        date: new Date().toLocaleDateString(),
+                        time: formatTime(elapsedTime),
+                        duration: elapsedTime,
+                        distance: parseFloat(distance.toFixed(2)),
+                        calories: parseInt(caloriesDisplay.textContent),
+                        chartData: chartData
+                    };
+ 
+                    let runHistory = JSON.parse(localStorage.getItem('runHistory')) || [];
+ 
+                    runHistory.push(runData);
+ 
+                    localStorage.setItem('runHistory', JSON.stringify(runHistory));
+ 
+                    loadHistory();
+ 
+                    resetRun();
+ 
+                    alert('Run saved successfully!');
+                }
+            }
+            function loadHistory() {
+                const runHistory = JSON.parse(localStorage.getItem('runHistory')) || [];
+ 
+                while (historyContainer.firstChild) {
+                    historyContainer.removeChild(historyContainer.firstChild);
+                }
+ 
+                if (runHistory.length === 0) {
+                    historyContainer.appendChild(noHistoryMessage);
+                    clearHistoryBtn.classList.add('hidden');
+                } else {
+                    if (noHistoryMessage.parentNode) {
+                        noHistoryMessage.parentNode.removeChild(noHistoryMessage);
+                    }
+                    clearHistoryBtn.classList.remove('hidden');
+ 
+                    runHistory.sort((a, b) => b.id - a.id);
+ 
+                    runHistory.forEach(run => {
+                        const historyItem = document.createElement('div');
+                        historyItem.className = 'history-item';
+                        historyItem.tabIndex = 0;
+                        historyItem.setAttribute('role', 'group');
+                        historyItem.setAttribute('aria-label', `Run on ${run.date}, duration ${run.time}, distance ${run.distance.toFixed(2)} kilometers, calories burned ${run.calories}`);
+ 
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = 'history-info';
+                        infoDiv.innerHTML = `
+                            <div class="date">${run.date}</div>
+                            <div class="duration">Duration: ${run.time}</div>
+                        `;
+ 
+                        const statsDiv = document.createElement('div');
+                        statsDiv.className = 'history-stats';
+                        statsDiv.innerHTML = `
+                            <div>
+                                <div class="value">${run.distance.toFixed(2)}</div>
+                                <div class="label">km</div>
+                            </div>
+                            <div>
+                                <div class="value">${run.calories}</div>
+                                <div class="label">cal</div>
+                            </div>
+                        `;
+ 
+                        historyItem.appendChild(infoDiv);
+                        historyItem.appendChild(statsDiv);
+ 
+                        historyContainer.appendChild(historyItem);
+                    });
+                }
+            }
+            function clearHistory() {
+                if (confirm('Are you sure you want to clear all run history?')) {
+                    localStorage.removeItem('runHistory');
+                    loadHistory();
+                }
+            }
+ 
+            function initChart() {
+                const ctx = document.getElementById('runChart').getContext('2d');
+ 
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                const textColor = isDarkMode ? '#e5e7eb' : '#374151';
+ 
+                runChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['0:00'],
+                        datasets: [{
+                            label: 'Distance (km)',
+                            data: [0],
+                            backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                            borderColor: 'rgba(14, 165, 233, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                            pointRadius: 3,
+                            tension: 0.2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: textColor
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            function updateChart() {
+                if (runChart) {
+                    runChart.data.labels = chartData.labels;
+                    runChart.data.datasets[0].data = chartData.distances;
+ 
+                    const isDarkMode = document.documentElement.classList.contains('dark');
+                    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    const textColor = isDarkMode ? '#e5e7eb' : '#374151';
+ 
+                    runChart.options.scales.y.grid.color = gridColor;
+                    runChart.options.scales.x.grid.color = gridColor;
+                    runChart.options.scales.y.ticks.color = textColor;
+                    runChart.options.scales.x.ticks.color = textColor;
+                    runChart.options.plugins.legend.labels.color = textColor;
+ 
+                    runChart.update();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

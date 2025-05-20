@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cal Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* overflow: hidden; */
+}
+
+/* background */
+.background {
+  position: absolute;
+}
+.background img {
+  position: fixed;
+  z-index: -1;
+  width: 1800px;
+  object-fit: cover;
+}
+
+/* nav */
+nav {
+  position: absolute;
+  z-index: 10000;
+}
+.logo {
+  padding: 20px;
+}
+.logo h2 {
+  letter-spacing: 2px;
+  font-size: 1.4rem;
+}
+
+/* main */
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid white;
+  padding: 50px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  background-color: transparent;
+  margin-top: 200px;
+}
+.profile {
+  /* border: 1px solid white; */
+  text-align: center;
+  padding: 0 20px 0 20px;
+}
+.profile img {
+  height: 150px;
+  width: auto;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.profile i {
+  animation: upDown 1s infinite;
+  transform: translateY(50%);
+}
+@keyframes upDown {
+  from {
+    transform: translateY(-40%);
+  }
+}
+/* Link */
+.linkme {
+  display: grid;
+}
+.linkme button {
+  background-color: transparent;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  border-radius: 30px;
+  border: none;
+}
+.linkme .akun {
+  display: flex;
+  justify-content: center;
+  border-radius: 30px;
+  /* border: 1px solid white; */
+  padding: 10px;
+  background-color: #a5a4a4;
+  transition: 0.2s ease-in-out;
+}
+.linkme .akun a{
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+.linkme .akun p {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: large;
+}
+.linkme .akun:hover {
+  background-color: #e3e3e3;
+}

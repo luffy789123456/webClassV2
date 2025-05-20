@@ -1,0 +1,750 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WhatsApp Link Generator | Instant Chat Links</title>
+    <style>
+        :root {
+            --whatsapp-green: #25D366;
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+ 
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+ 
+        .glass-card {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+ 
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.15);
+        }
+ 
+        /* Header */
+        header {
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+ 
+        .logo svg {
+            height: 30px;
+            width: 30px;
+            margin-right: 10px;
+            fill: var(--whatsapp-green);
+        }
+ 
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+ 
+        .glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, rgba(37, 211, 102, 0) 70%);
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 8s infinite ease-in-out;
+        }
+ 
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+        }
+ 
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ffffff, var(--whatsapp-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+ 
+        .subtitle {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            color: var(--text-secondary);
+        }
+ 
+        /* Generator Section */
+        .generator-form {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+ 
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+ 
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+ 
+        .input-group input, 
+        .input-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+ 
+        .input-group input:focus, 
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--whatsapp-green);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+        }
+ 
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+ 
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 2.7rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+ 
+        .input-group:focus-within .input-icon {
+            color: var(--whatsapp-green);
+        }
+ 
+        .btn {
+            display: inline-block;
+            background: var(--whatsapp-green);
+            color: #000;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        .btn:hover {
+            background: #1fad53;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+            transform: translateY(-2px);
+        }
+ 
+        .btn:active {
+            transform: translateY(0);
+        }
+ 
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+ 
+        .btn:hover::before {
+            opacity: 1;
+            left: 100%;
+        }
+ 
+        .btn-generate {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+ 
+        .result-section {
+            margin-top: 3rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            display: none;
+        }
+ 
+        .result-section.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+ 
+        .result-card {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(37, 211, 102, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(37, 211, 102, 0.2);
+        }
+ 
+        .link-display {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            word-break: break-all;
+        }
+ 
+        .link-text {
+            color: var(--whatsapp-green);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+ 
+        .copy-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.3rem 0.8rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+ 
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+ 
+        .qr-container {
+            width: 200px;
+            height: 200px;
+            margin: 1.5rem auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+ 
+        /* How it Works Section */
+        .how-works {
+            padding: 4rem 0;
+        }
+ 
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+ 
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+ 
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--whatsapp-green);
+            border-radius: 2px;
+        }
+ 
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+ 
+        .step-card {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+ 
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 40px;
+            height: 40px;
+            background: var(--whatsapp-green);
+            color: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+ 
+        .step-icon {
+            margin-bottom: 1.5rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(37, 211, 102, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+ 
+        .step-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--whatsapp-green);
+        }
+ 
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+ 
+        /* About Section */
+        .about-section {
+            padding: 4rem 0;
+            background: linear-gradient(to bottom, var(--dark-bg), rgba(18, 18, 18, 0.9));
+        }
+ 
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+ 
+        .benefit-card {
+            height: 100%;
+        }
+ 
+        .benefit-icon {
+            margin-bottom: 1.2rem;
+            color: var(--whatsapp-green);
+        }
+ 
+        .benefit-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+ 
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            background: #0a0a0a;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+ 
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+ 
+        .footer-links {
+            margin: 1.5rem 0;
+        }
+ 
+        .footer-links a {
+            color: var(--text-secondary);
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+ 
+        .footer-links a:hover {
+            color: var(--whatsapp-green);
+        }
+ 
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--whatsapp-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+ 
+        .doc-link:hover {
+            text-decoration: underline;
+        }
+ 
+        .copyright {
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+ 
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+ 
+            .steps-container {
+                flex-direction: column;
+            }
+ 
+            .step-card {
+                margin-bottom: 2rem;
+            }
+ 
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+ 
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .animate-fadeUp {
+            animation: fadeUp 0.6s ease forwards;
+        }
+ 
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>WA Link Gen</span>
+            </div>
+ 
+            <div class="hero">
+                <div class="glow"></div>
+                <h1 class="animate-fadeUp">Generate WhatsApp Chat Links</h1>
+                <p class="subtitle animate-fadeUp delay-1">Buat tautan chat WhatsApp khusus secara instan dan hubungkan dengan pelanggan Anda tanpa hambatan.</p>
+ 
+                <div class="generator-form glass-card animate-fadeUp delay-2">
+                    <div class="input-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="kode nomor negara)" required />
+                        <div class="input-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2a9 9 0 00-9-9v2c3.87 0 7 3.13 7 7z"/>
+                                <path d="M15 12h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
+                            </svg>
+                        </div>
+                    </div>
+ 
+                    <div class="input-group">
+                        <label for="message">Custom Message (Optional)</label>
+                        <textarea id="message" placeholder="pesan lu"></textarea>
+                        <div class="input-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                            </svg>
+                        </div>
+                    </div>
+ 
+                    <button class="btn btn-generate" id="generateBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.953 8.114c-.172-.172-.37-.345-.544-.517.172.172.344.345.544.517zm.517.517c.172.172.345.37.517.543-.172-.172-.345-.343-.517-.543zM16.59 2c-1.896 0-3.684.74-5.027 2.082l-7.11 7.11-2.59 5.45a1.003 1.003 0 001.32 1.320l5.448-2.59 7.11-7.11C17.103 6.9 18 5.32 18 3.637 18 2.73 17.453 2 16.59 2zM6.89 15.677l-2.968 1.41.982-2.065c.402.402.954.781 1.985 1.155v-.5z"/>
+                        </svg>
+                        Generate Link
+                    </button>
+                </div>
+ 
+                <div class="result-section" id="resultSection">
+                    <h3>Your WhatsApp Link is Ready!</h3>
+                    <div class="result-card glass-card">
+                        <div class="link-display">
+                            <span class="link-text" id="generatedLink">https://wa.me/1234567890?text=Hello</span>
+                            <button class="copy-btn" id="copyBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                </svg>
+                                Copy
+                            </button>
+                        </div>
+                        <div class="qr-container" id="qrCode">
+                            <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="150" height="150" fill="white"/>
+                                <path d="M25,25 h30 v30 h-30 z" fill="black"/>
+                                <path d="M95,25 h30 v30 h-30 z" fill="black"/>
+                                <path d="M25,95 h30 v30 h-30 z" fill="black"/>
+                                <path d="M65,65 h20 v20 h-20 z" fill="black"/>
+                                <path d="M95,95 h10 v10 h-10 z" fill="black"/>
+                                <path d="M115,75 h10 v40 h-10 z" fill="black"/>
+                                <path d="M65,35 h20 v20 h-20 z" fill="black"/>
+                                <path d="M65,95 h20 v10 h-20 z" fill="black"/>
+                                <path d="M95,65 h10 v20 h-10 z" fill="black"/>
+                                <path d="M35,65 h20 v20 h-20 z" fill="black"/>
+                            </svg>
+                        </div>
+                        <button class="btn" id="openWhatsappBtn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                                <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                            </svg>
+                            Open In WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+ 
+    <section class="how-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Three simple steps to create your WhatsApp chat link</p>
+            </div>
+ 
+            <div class="steps-container">
+                <div class="step-card glass-card animate-fadeUp">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">Enter Phone Number</h3>
+                    <p>Add the recipient's phone number including the country code without any symbols.</p>
+                </div>
+ 
+                <div class="step-card glass-card animate-fadeUp delay-1">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">Add Custom Message</h3>
+                    <p>Write a pre-filled message that will automatically appear in the chat when opened (optional).</p>
+                </div>
+ 
+                <div class="step-card glass-card animate-fadeUp delay-2">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">Share Your Link</h3>
+                    <p>Generate the link, copy it, or use the QR code to share with your audience instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <section class="about-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>About This Tool</h2>
+                <p>Why should you use WhatsApp Link Generator?</p>
+            </div>
+ 
+            <div class="about-grid">
+                <div class="benefit-card glass-card animate-fadeUp">
+                    <div class="benefit-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                            <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-title">Save Time</h3>
+                    <p>Create WhatsApp chat links in seconds without having to save contacts first.</p>
+                </div>
+ 
+                <div class="benefit-card glass-card animate-fadeUp delay-1">
+                    <div class="benefit-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-title">Easy to Use</h3>
+                    <p>Simple interface that anyone can use without technical knowledge.</p>
+                </div>
+ 
+                <div class="benefit-card glass-card animate-fadeUp delay-2">
+                    <div class="benefit-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4a8 8 0 100 16 8 8 0 000-16zm3.5 9.5h-7v-1h7v1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-title">Customizable</h3>
+                    <p>Add personalized messages to make your chats more engaging.</p>
+                </div>
+ 
+                <div class="benefit-card glass-card animate-fadeUp delay-3">
+                    <div class="benefit-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12c0 4.41 2.86 8.15 6.84 9.5v-6.71H7.9v-2.79h1.94V9.41c0-1.92 1.17-2.98 2.95-2.98.85 0 1.74.15 1.74.15v1.92h-1c-.99 0-1.3.62-1.3 1.25v1.5h2.22l-.35 2.79h-1.87v6.71C19.14 20.15 22 16.41 22 12c0-5.52-4.48-10-10-10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-title">Free & Secure</h3>
+                    <p>No sign-ups or data storage, your privacy is respected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://wa.me/" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    <a href="https://faq.whatsapp.com/" target="_blank" rel="noopener noreferrer">FAQ</a>
+                    <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">Twitter</a>
+                </div>
+                <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="doc-link">
+                    Documentation
+                    <svg width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="margin-left: 4px;">
+                        <path d="M14 3v2h3.59L7 15.59 8.41 17 19 6.41V10h2V3h-7z"/>
+                        <path d="M5 5h2v14H5z"/>
+                    </svg>
+                </a>
+                <div class="copyright">
+                    &copy; 2024 WA Link Gen. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+ 
+    <script>
+        const phoneInput = document.getElementById('phone');
+        const messageInput = document.getElementById('message');
+        const generateBtn = document.getElementById('generateBtn');
+        const resultSection = document.getElementById('resultSection');
+        const generatedLink = document.getElementById('generatedLink');
+        const copyBtn = document.getElementById('copyBtn');
+        const openWhatsappBtn = document.getElementById('openWhatsappBtn');
+ 
+        function encodeMessage(message) {
+            return encodeURIComponent(message.trim());
+        }
+        function validatePhone(phone) {
+            // Basic validation: only digits, length between 8 and 15
+            const phoneDigits = phone.replace(/\D/g, '');
+            return phoneDigits.length >= 8 && phoneDigits.length <= 15;
+        }
+        generateBtn.addEventListener('click', () => {
+            const phone = phoneInput.value.trim();
+            const message = messageInput.value.trim();
+ 
+            if (!validatePhone(phone)) {
+                alert('Please enter a valid phone number including country code without symbols.');
+                phoneInput.focus();
+                return;
+            }
+            let url = `https://wa.me/${phone}`;
+            if (message.length > 0) {
+                url += `?text=${encodeMessage(message)}`;
+            }
+            generatedLink.textContent = url;
+            generatedLink.href = url;
+            openWhatsappBtn.dataset.url = url;
+ 
+            resultSection.classList.add('show');
+        });
+        copyBtn.addEventListener('click', () => {
+            const text = generatedLink.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                    </svg> Copy`;
+                }, 2000);
+            });
+        });
+ 
+        openWhatsappBtn.addEventListener('click', () => {
+            const url = openWhatsappBtn.dataset.url;
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+</body>
+</html>

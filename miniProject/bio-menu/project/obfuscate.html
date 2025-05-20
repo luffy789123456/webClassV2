@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obfuscate - Creative Code Obfuscator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+ 
+        body {
+            background-color: #0f0f1a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+ 
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+ 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2a3c;
+        }
+ 
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 0, 204, 0.3);
+        }
+ 
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+ 
+        nav ul li {
+            margin-left: 30px;
+        }
+ 
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+ 
+        nav ul li a:hover {
+            color: #ff00cc;
+        }
+ 
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 0;
+        }
+ 
+        .profile-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            border-radius: 50%;
+            padding: 10px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            box-shadow: 0 0 30px rgba(255, 0, 204, 0.5);
+            animation: pulse 2s infinite;
+        }
+ 
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: #fff;
+            overflow: hidden;
+        }
+ 
+        .creator-name {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 0, 204, 0.3);
+        }
+ 
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+ 
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px;
+            background: #2a2a3c;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        .social-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+ 
+        .social-btn.yt:hover {
+            background: #FF0000;
+        }
+ 
+        .social-btn.tt:hover {
+            background: #000000;
+        }
+ 
+        .social-btn.wa:hover {
+            background: #25D366;
+        }
+ 
+        .social-btn.tw:hover {
+            background: #1DA1F2;
+        }
+ 
+        .obfuscate-box {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid #2a2a3c;
+        }
+ 
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #2a2a3c;
+        }
+ 
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+ 
+        .tab.active {
+            color: #ff00cc;
+        }
+ 
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+        }
+ 
+        .tab-content {
+            display: none;
+        }
+ 
+        .tab-content.active {
+            display: block;
+        }
+ 
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: #0d0d18;
+            border: 1px solid #2a2a3c;
+            border-radius: 8px;
+            padding: 15px;
+            color: #ffffff;
+            font-family: monospace;
+            resize: none;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+ 
+        textarea:focus {
+            outline: none;
+            border-color: #ff00cc;
+            box-shadow: 0 0 10px rgba(255, 0, 204, 0.3);
+        }
+ 
+        .method-selector {
+            display: flex;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+ 
+        .method-option {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #2a2a3c;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+ 
+        .method-option.active {
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.3);
+        }
+ 
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+ 
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 0, 204, 0.4);
+        }
+ 
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+ 
+        button:hover::before {
+            left: 100%;
+        }
+ 
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid #3333ff;
+            box-shadow: none;
+        }
+ 
+        .secondary-btn:hover {
+            background: rgba(51, 51, 255, 0.1);
+        }
+ 
+        footer {
+            margin-top: 80px;
+            padding: 30px 0;
+            border-top: 1px solid #2a2a3c;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #8888a0;
+        }
+ 
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 204, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 0, 204, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 204, 0);
+            }
+        }
+ 
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+ 
+            .creator-name {
+                font-size: 2rem;
+            }
+ 
+            .tabs {
+                justify-content: center;
+            }
+ 
+            .tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+ 
+    <div class="container">
+        <header>
+            <div class="logo">Obfuscate</div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+ 
+        <section class="hero">
+            <div class="profile-container">
+                <div class="profile-pic">
+                    <img src="../image/logo.png" style="width: 100%;" alt="Creator Profile">
+                </div>
+            </div>
+ 
+            <h1 class="creator-name">TKJ 2</h1>
+ 
+            <div class="social-links">
+                <a href="#" class="social-btn yt" title="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                </a>
+ 
+                <a href="#" class="social-btn wa" title="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                </a>
+                <a href="#" class="social-btn tw" title="Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                </a>
+            </div>
+ 
+            <div class="obfuscate-box">
+                <div class="tabs">
+                    <div class="tab active" data-tab="universal">Universal</div>
+                    <div class="tab" data-tab="text">Text</div>
+                    <div class="tab" data-tab="coding">Coding</div>
+                    <div class="tab" data-tab="crypto">Cryptography</div>
+                    <div class="tab" data-tab="custom">Custom</div>
+                </div>
+ 
+                <div class="tab-content active" id="universal-content">
+                    <textarea id="universal-input" placeholder="Enter anything to obfuscate..."></textarea>
+ 
+                    <div class="method-selector" id="universal-methods">
+                        <div class="method-option active" data-method="base64">Base64</div>
+                        <div class="method-option" data-method="binary">Binary</div>
+                        <div class="method-option" data-method="hex">Hexadecimal</div>
+                        <div class="method-option" data-method="url">URL Encode</div>
+                        <div class="method-option" data-method="reverse">Reverse</div>
+                    </div>
+ 
+                    <div class="button-group">
+                        <button id="obfuscate-universal">Obfuscate</button>
+                        <button class="secondary-btn" id="copy-universal">Copy Result</button>
+                        <button class="secondary-btn" id="clear-universal">Clear</button>
+                    </div>
+                </div>
+ 
+                <div class="tab-content" id="text-content">
+                    <textarea id="text-input" placeholder="Enter your text to obfuscate..."></textarea>
+ 
+                    <div class="method-selector" id="text-methods">
+                        <div class="method-option active" data-method="html-entities">HTML Entities</div>
+                        <div class="method-option" data-method="morse">Morse Code</div>
+                        <div class="method-option" data-method="caesar">Caesar Cipher</div>
+                        <div class="method-option" data-method="leetspeak">Leetspeak</div>
+                        <div class="method-option" data-method="upside-down">Upside Down</div>
+                    </div>
+ 
+                    <div class="button-group">
+                        <button id="obfuscate-text">Obfuscate</button>
+                        <button class="secondary-btn" id="copy-text">Copy Result</button>
+                        <button class="secondary-btn" id="clear-text">Clear</button>
+                    </div>
+                </div>
+ 
+                <div class="tab-content" id="coding-content">
+                    <textarea id="coding-input" placeholder="Enter your code to obfuscate..."></textarea>
+ 
+                    <div class="method-selector" id="coding-methods">
+                        <div class="method-option active" data-method="js-minify">JS Minify</div>
+                        <div class="method-option" data-method="js-obfuscate">JS Obfuscate</div>
+                        <div class="method-option" data-method="html-compress">HTML Compress</div>
+                        <div class="method-option" data-method="css-minify">CSS Minify</div>
+                        <div class="method-option" data-method="eval-encode">Eval Encode</div>
+                    </div>
+ 
+                    <div class="button-group">
+                        <button id="obfuscate-coding">Obfus</button>
+                        <button class="secondary-btn" id="copy-coding">Copy Result</button>
+                        <button class="secondary-btn" id="clear-coding">Clear</button>
+                    </div>
+                </div>
+ 
+                <div class="tab-content" id="crypto-content">
+                    <textarea id="crypto-input" placeholder="Enter your text to encrypt..."></textarea>
+ 
+                    <div class="method-selector" id="crypto-methods">
+                        <div class="method-option active" data-method="aes">AES (with key)</div>
+                        <div class="method-option" data-method="vigenere">Vigenère Cipher</div>
+                        <div class="method-option" data-method="rot13">ROT13</div>
+                        <div class="method-option" data-method="hash-md5">MD5 Hash</div>
+                        <div class="method-option" data-method="hash-sha256">SHA-256</div>
+                    </div>
+ 
+                    <div class="button-group">
+                        <button id="obfuscate-crypto">Encrypt</button>
+                        <button class="secondary-btn" id="copy-crypto">Copy Result</button>
+                        <button class="secondary-btn" id="clear-crypto">Clear</button>
+                    </div>
+                </div>
+ 
+                <div class="tab-content" id="custom-content">
+                    <textarea id="custom-input" placeholder="Enter your text to apply custom transformations..."></textarea>
+ 
+                    <div class="method-selector" id="custom-methods">
+                        <div class="method-option active" data-method="ascii-art">ASCII Art</div>
+                        <div class="method-option" data-method="word-scramble">Word Scramble</div>
+                        <div class="method-option" data-method="zalgo">Zalgo Text</div>
+                        <div class="method-option" data-method="unicode-full">Unicode Fullwidth</div>
+                        <div class="method-option" data-method="bubble-text">Bubble Text</div>
+                    </div>
+ 
+                    <div class="button-group">
+                        <button id="obfuscate-custom">Transform</button>
+                        <button class="secondary-btn" id="copy-custom">Copy Result</button>
+                        <button class="secondary-btn" id="clear-custom">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <footer>
+            <p>© 2025 Obfuscate | Created with ❤️ by TKJ 2</p>
+        </footer>
+    </div>
+ 
+    <script>
+ 
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ff00cc"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#3333ff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                                        "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+ 
+ 
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+ 
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+ 
+ 
+                tab.classList.add('active');
+ 
+ 
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-content`).classList.add('active');
+            });
+        });
+ 
+ 
+        document.querySelectorAll('.method-option').forEach(option => {
+            option.addEventListener('click', () => {
+ 
+                const parentSelector = option.parentNode;
+ 
+ 
+                parentSelector.querySelectorAll('.method-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+ 
+ 
+                option.classList.add('active');
+            });
+        });
+ 
+ 
+        function toBase64(text) {
+            try {
+                return btoa(unescape(encodeURIComponent(text)));
+            } catch (e) {
+                return "Error: Could not convert to Base64";
+            }
+        }
+ 
+        function fromBase64(text) {
+            try {
+                return decodeURIComponent(escape(atob(text)));
+            } catch (e) {
+                return "Error: Not a valid Base64 string";
+            }
+        }
+ 
+        function toBinary(text) {
+            return text.split('').map(char => {
+                return char.charCodeAt(0).toString(2).padStart(8, '0');
+            }).join(' ');
+        }
+ 
+        function toHex(text) {
+            return text.split('').map(char => {
+                return char.charCodeAt(0).toString(16).padStart(2, '0');
+            }).join('');
+        }
+ 
+        function toUrl(text) {
+            return encodeURIComponent(text);
+        }
+ 
+        function reverse(text) {
+            return text.split('').reverse().join('');
+        }
+ 
+ 
+        function toHtmlEntities(text) {
+            return text.split('').map(char => {
+                const code = char.charCodeAt(0);
+                return `&#${code};`;
+            }).join('');
+        }
+ 
+        function toMorse(text) {
+            const morseCode = {
+                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+                'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+                'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+                'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+                '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.', '.': '.-.-.-', ',': '--..--',
+                '?': '..--..', "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...',
+                ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.',
+                '$': '...-..-', '@': '.--.-.'
+            };
+ 
+            return text.toUpperCase().split('').map(char => {
+                if (char === ' ') return '   ';
+                return morseCode[char] || char;
+            }).join(' ');
+        }
+ 
+        function toCaesar(text, shift = 13) {
+            return text.split('').map(char => {
+                const code = char.charCodeAt(0);
+ 
+ 
+                if (code >= 65 && code <= 90) {
+                    return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+                }
+ 
+                else if (code >= 97 && code <= 122) {
+                    return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+                }
+ 
+                else {
+                    return char;
+                }
+            }).join('');
+        }
+ 
+        function toLeetspeak(text) {
+            const leetMap = {
+                'a': '4', 'b': '8', 'e': '3', 'g': '6', 'i': '1', 'l': '1',
+                'o': '0', 's': '5', 't': '7', 'z': '2', 'A': '4', 'B': '8',
+                'E': '3', 'G': '6', 'I': '1', 'L': '1', 'O': '0', 'S': '5',
+                'T': '7', 'Z': '2'
+            };
+ 
+            return text.split('').map(char => leetMap[char] || char).join('');
+        }
+ 
+        function toUpsideDown(text) {
+            const upsideDownMap = {
+                'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ',
+                'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l',
+                'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ',
+                's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x',
+                'y': 'ʎ', 'z': 'z', 'A': '∀', 'B': 'B', 'C': 'Ɔ', 'D': 'D',
+                'E': 'Ǝ', 'F': 'Ⅎ', 'G': 'פ', 'H': 'H', 'I': 'I', 'J': 'ſ',
+                'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ',
+                'Q': 'Q', 'R': 'ꓤ', 'S': 'S', 'T': '┴', 'U': '∩', 'V': 'Λ',
+                'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z', '0': '0', '1': 'Ɩ',
+                '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ',
+                '8': '8', '9': '6', '.': '˙', ',': '\'', '\'': ',', '"': ',,',
+                '`': ',', '?': '¿', '!': '¡', '(': ')', ')': '(', '[': ']',
+                ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '&': '⅋',
+                '_': '‾', '∴': '∵', '⁅': '⁆'
+            };
+ 
+            return text.split('').map(char => upsideDownMap[char] || char).join('');
+        }
+            function jsMinify(code) {
+ 
+            return code
+                .replace(/\/\/.*?$/gm, '') 
+                .replace(/\/\*[\s\S]*?\*\//g, '') 
+                .replace(/\s+/g, ' ')
+                .replace(/;\s*/g, ';') 
+                .replace(/{\s*/g, '{') 
+                .replace(/\s*}/g, '}') 
+                .replace(/\s*:\s*/g, ':') 
+                .replace(/\s*,\s*/g, ',') 
+                .trim();
+        }
+ 
+        function jsObfuscate(code) {
+ 
+            const varNames = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let counter = 0;
+ 
+            let result = jsMinify(code);
+ 
+ 
+            const varRegex = /var\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+            let match;
+            const varMap = {};
+ 
+            while ((match = varRegex.exec(result)) !== null) {
+                const varName = match[1];
+                if (!varMap[varName]) {
+                    const newName = '_' + varNames[counter % varNames.length] + Math.floor(counter / varNames.length);
+                    varMap[varName] = newName;
+                    counter++;
+                }
+            }
+ 
+ 
+            for (const [oldName, newName] of Object.entries(varMap)) {
+                const regex = new RegExp(`\\b${oldName}\\b`, 'g');
+                result = result.replace(regex, newName);
+            }
+ 
+            result = `(function(){${result}})();`;
+ 
+            return result;
+        }
+ 
+        function htmlCompress(html) {
+            return html
+                .replace(/<!--[\s\S]*?-->/g, '') 
+                .replace(/\s+/g, ' ') 
+                .replace(/>\s+</g, '><') 
+                .replace(/\s+>/g, '>') 
+                .replace(/<\s+/g, '<')
+                .trim();
+        }
+ 
+        function cssMinify(css) {
+            return css
+                .replace(/\/\*[\s\S]*?\*\//g, '') 
+                .replace(/\s+/g, ' ') 
+                .replace(/\s*{\s*/g, '{') 
+                .replace(/\s*}\s*/g, '}')
+                .replace(/\s*:\s*/g, ':') 
+                .replace(/\s*;\s*/g, ';') 
+                .replace(/\s*,\s*/g, ',') 
+                .replace(/;\}/g, '}') 
+                .trim();
+        }
+ 
+        function evalEncode(code) {
+
+            
+            const encoded = toBase64(code);
+            return `eval(atob('${encoded}'));`;
+        }
+ 
+        
+    
+        function aesEncrypt(text, key = "default-key") {
+
+            
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                const charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                result += String.fromCharCode(charCode);
+            }
+            return toBase64(result);
+        }
+ 
+        function vigenereCipher(text, key = "VIGENERE") {
+            key = key.toUpperCase();
+            let result = "";
+            let keyIndex = 0;
+ 
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+ 
+                if (/[A-Z]/i.test(char)) {
+
+                    
+    
+                    const isUpperCase = char === char.toUpperCase();
+                    const plainChar = char.toUpperCase();
+                    const plainCode = plainChar.charCodeAt(0) - 65;
+                    const keyChar = key[keyIndex % key.length];
+                    const keyCode = keyChar.charCodeAt(0) - 65;
+ 
+
+                    
+    
+                    const encryptedCode = (plainCode + keyCode) % 26;
+                    const encryptedChar = String.fromCharCode(encryptedCode + 65);
+ 
+                    result += isUpperCase ? encryptedChar : encryptedChar.toLowerCase();
+                    keyIndex++;
+                } else {
+                    
+                    
+    
+                    result += char;
+                }
+            }
+ 
+            return result;
+        }
+ 
+        function rot13(text) {
+            return toCaesar(text, 13);
+        }
+ 
+        function md5Hash(text) {
+            
+            
+            return "md5-" + toHex(text).substring(0, 32);
+        }
+ 
+        function sha256Hash(text) {
+            
+            
+            return "sha256-" + toHex(text).substring(0, 64);
+        }
+ 
+
+    
+        function toAsciiArt(text) {
+ 
+            const asciiArt = {
+                'A': '  /\\\n /  \\\n/____\\',
+                'B': '|---.\n|---|\n|---\'',
+                'C': ' ---\n|   \n ___'
+ 
+            };
+ 
+
+            return text.toUpperCase().split('').map(char => {
+                if (asciiArt[char]) {
+                    return asciiArt[char];
+                }
+                return char;
+            }).join('\n\n');
+        }
+ 
+        function wordScramble(text) {
+            return text.split(' ').map(word => {
+                if (word.length <= 2) return word;
+ 
+                const firstChar = word[0];
+                const lastChar = word[word.length - 1];
+                const middleChars = word.substring(1, word.length - 1).split('');
+ 
+
+                for (let i = middleChars.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [middleChars[i], middleChars[j]] = [middleChars[j], middleChars[i]];
+                }
+ 
+                return firstChar + middleChars.join('') + lastChar;
+            }).join(' ');
+        }
+ 
+        function zalgoText(text) {
+            const zalgoMarks = [
+                '\u0300', '\u0301', '\u0302', '\u0303', '\u0304', '\u0305', '\u0306', '\u0307',
+                '\u0308', '\u0309', '\u030A', '\u030B', '\u030C', '\u030D', '\u030E', '\u030F'
+            ];
+ 
+            return text.split('').map(char => {
+                let newChar = char;
+                const numMarks = Math.floor(Math.random() * 5) + 1;
+ 
+                for (let i = 0; i < numMarks; i++) {
+                    const markIndex = Math.floor(Math.random() * zalgoMarks.length);
+                    newChar += zalgoMarks[markIndex];
+                }
+ 
+                return newChar;
+            }).join('');
+        }
+ 
+        function toUnicodeFullwidth(text) {
+            return text.split('').map(char => {
+                const code = char.charCodeAt(0);
+ 
+                // Convert ASCII to fullwidth characters (0xFF01 to 0xFF5E)
+                if (code >= 33 && code <= 126) {
+                    return String.fromCharCode(code + 0xFEE0);
+                }
+ 
+                return char;
+            }).join('');
+        }
+ 
+        function toBubbleText(text) {
+            const bubbleMap = {
+                'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ',
+                'g': 'ⓖ', 'h': 'ⓗ', 'i': 'ⓘ', 'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ',
+                'm': 'ⓜ', 'n': 'ⓝ', 'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ',
+                's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ', 'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ',
+                'y': 'ⓨ', 'z': 'ⓩ', 'A': 'Ⓐ', 'B': 'Ⓑ', 'C': 'Ⓒ', 'D': 'Ⓓ',
+                'E': 'Ⓔ', 'F': 'Ⓕ', 'G': 'Ⓖ', 'H': 'Ⓗ', 'I': 'Ⓘ', 'J': 'Ⓙ',
+                'K': 'Ⓚ', 'L': 'Ⓛ', 'M': 'Ⓜ', 'N': 'Ⓝ', 'O': 'Ⓞ', 'P': 'Ⓟ',
+                'Q': 'Ⓠ', 'R': 'Ⓡ', 'S': 'Ⓢ', 'T': 'Ⓣ', 'U': 'Ⓤ', 'V': 'Ⓥ',
+                'W': 'Ⓦ', 'X': 'Ⓧ', 'Y': 'Ⓨ', 'Z': 'Ⓩ', '0': '⓪', '1': '①',
+                '2': '②', '3': '③', '4': '④', '5': '⑤', '6': '⑥', '7': '⑦',
+                '8': '⑧', '9': '⑨', ' ': ' '
+            };
+ 
+            return text.split('').map(char => bubbleMap[char] || char).join('');
+        }
+ 
+        document.getElementById('obfuscate-universal').addEventListener('click', () => {
+            const input = document.getElementById('universal-input').value;
+            const methodOption = document.querySelector('#universal-methods .method-option.active');
+            const method = methodOption.getAttribute('data-method');
+ 
+            let result = input;
+ 
+            switch (method) {
+                case 'base64':
+                    result = toBase64(input);
+                    break;
+                case 'binary':
+                    result = toBinary(input);
+                    break;
+                case 'hex':
+                    result = toHex(input);
+                    break;
+                case 'url':
+                    result = toUrl(input);
+                    break;
+                case 'reverse':
+                    result = reverse(input);
+                    break;
+            }
+ 
+            document.getElementById('universal-input').value = result;
+        });
+ 
+        document.getElementById('obfuscate-text').addEventListener('click', () => {
+            const input = document.getElementById('text-input').value;
+            const methodOption = document.querySelector('#text-methods .method-option.active');
+            const method = methodOption.getAttribute('data-method');
+ 
+            let result = input;
+ 
+            switch (method) {
+                case 'html-entities':
+                    result = toHtmlEntities(input);
+                    break;
+                case 'morse':
+                    result = toMorse(input);
+                    break;
+                case 'caesar':
+                    result = toCaesar(input);
+                    break;
+                case 'leetspeak':
+                    result = toLeetspeak(input);
+                    break;
+                case 'upside-down':
+                    result = toUpsideDown(input);
+                    break;
+            }
+ 
+            document.getElementById('text-input').value = result;
+        });
+ 
+        document.getElementById('obfuscate-coding').addEventListener('click', () => {
+            const input = document.getElementById('coding-input').value;
+            const methodOption = document.querySelector('#coding-methods .method-option.active');
+            const method = methodOption.getAttribute('data-method');
+ 
+            let result = input;
+ 
+            switch (method) {
+                case 'js-minify':
+                    result = jsMinify(input);
+                    break;
+                case 'js-obfuscate':
+                    result = jsObfuscate(input);
+                    break;
+                case 'html-compress':
+                    result = htmlCompress(input);
+                    break;
+                case 'css-minify':
+                    result = cssMinify(input);
+                    break;
+                case 'eval-encode':
+                    result = evalEncode(input);
+                    break;
+            }
+ 
+            document.getElementById('coding-input').value = result;
+        });
+ 
+        document.getElementById('obfuscate-crypto').addEventListener('click', () => {
+            const input = document.getElementById('crypto-input').value;
+            const methodOption = document.querySelector('#crypto-methods .method-option.active');
+            const method = methodOption.getAttribute('data-method');
+ 
+            let result = input;
+ 
+            switch (method) {
+                case 'aes':
+                    const key = prompt("Enter encryption key:", "default-key");
+                    result = aesEncrypt(input, key || "default-key");
+                    break;
+                case 'vigenere':
+                    const vigKey = prompt("Enter Vigenère key:", "VIGENERE");
+                    result = vigenereCipher(input, vigKey || "VIGENERE");
+                    break;
+                case 'rot13':
+                    result = rot13(input);
+                    break;
+                case 'hash-md5':
+                    result = md5Hash(input);
+                    break;
+                case 'hash-sha256':
+                    result = sha256Hash(input);
+                    break;
+            }
+            document.getElementById('crypto-input').value = result;
+        });
+ 
+        document.getElementById('obfuscate-custom').addEventListener('click', () => {
+            const input = document.getElementById('custom-input').value;
+            const methodOption = document.querySelector('#custom-methods .method-option.active');
+            const method = methodOption.getAttribute('data-method');
+ 
+            let result = input;
+ 
+            switch (method) {
+                case 'ascii-art':
+                    result = toAsciiArt(input);
+                    break;
+                case 'word-scramble':
+                    result = wordScramble(input);
+                    break;
+                case 'zalgo':
+                    result = zalgoText(input);
+                    break;
+                case 'unicode-full':
+                    result = toUnicodeFullwidth(input);
+                    break;
+                case 'bubble-text':
+                    result = toBubbleText(input);
+                    break;
+            }
+ 
+            document.getElementById('custom-input').value = result;
+        });
+ 
+
+    
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+ 
+
+            
+            const btnId = `copy-${elementId.split('-')[0]}`;
+            const btn = document.getElementById(btnId);
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+ 
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }
+ 
+
+    
+        document.getElementById('copy-universal').addEventListener('click', () => {
+            copyToClipboard('universal-input');
+        });
+ 
+        document.getElementById('copy-text').addEventListener('click', () => {
+            copyToClipboard('text-input');
+        });
+ 
+        document.getElementById('copy-coding').addEventListener('click', () => {
+            copyToClipboard('coding-input');
+        });
+ 
+        document.getElementById('copy-crypto').addEventListener('click', () => {
+            copyToClipboard('crypto-input');
+        });
+ 
+        document.getElementById('copy-custom').addEventListener('click', () => {
+            copyToClipboard('custom-input');
+        });
+ 
+
+    
+        document.getElementById('clear-universal').addEventListener('click', () => {
+            document.getElementById('universal-input').value = '';
+        });
+ 
+        document.getElementById('clear-text').addEventListener('click', () => {
+            document.getElementById('text-input').value = '';
+        });
+ 
+        document.getElementById('clear-coding').addEventListener('click', () => {
+            document.getElementById('coding-input').value = '';
+        });
+ 
+        document.getElementById('clear-crypto').addEventListener('click', () => {
+            document.getElementById('crypto-input').value = '';
+        });
+ 
+        document.getElementById('clear-custom').addEventListener('click', () => {
+            document.getElementById('custom-input').value = '';
+        });
+    </script>
+</body>
+</html>

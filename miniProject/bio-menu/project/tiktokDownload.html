@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TikTok Downloader</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #7b2ff7;
+      --secondary: #00f2ea;
+      --dark: #121212;
+      --light: #ffffff;
+      --success: #00d26a;
+      --warning: #ffbb00;
+      --error: #ff4757;
+    }
+    
+    body {
+      min-height: 100vh;
+      background-color: var(--dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(123, 47, 247, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 234, 0.3) 0%, transparent 30%);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--light);
+    }
+    
+    .header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 5px;
+    }
+    
+    .logo i {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    
+    .subheading {
+      font-size: 1rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 10px;
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 35px 30px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 550px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .input-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .input-container i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
+    }
+    
+    input {
+      width: 100%;
+      padding: 16px 16px 16px 50px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 1rem;
+      color: var(--light);
+      transition: all 0.3s ease;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(123, 47, 247, 0.2);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 14px 10px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    button i {
+      font-size: 1.1rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: var(--light);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(123, 47, 247, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    #loading {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    #result {
+      margin-top: 20px;
+    }
+    
+    .result-card {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .result-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .result-title i.success {
+      color: var(--success);
+    }
+    
+    .result-title i.error {
+      color: var(--error);
+    }
+    
+    video {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .download-options {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .download-now {
+      background: var(--success);
+      color: var(--light);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .download-alt {
+      background: var(--warning);
+      color: var(--dark);
+    }
+    
+    .download-direct {
+      background: var(--primary);
+      color: var(--light);
+    }
+    
+    .download-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 210, 106, 0.3);
+    }
+    
+    .download-alt:hover {
+      box-shadow: 0 6px 15px rgba(255, 187, 0, 0.3);
+    }
+    
+    .download-direct:hover {
+      box-shadow: 0 6px 15px rgba(123, 47, 247, 0.3);
+    }
+    
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    #videoSrc {
+      display: none;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <i class="fab fa-tiktok"></i>
+    </div>
+    <h1>TikTok Downloader</h1>
+    <p class="subheading">Unduh video TikTok tanpa watermark dengan mudah</p>
+  </div>
+  
+  <div class="container">
+    <div class="input-container">
+      <i class="fas fa-link"></i>
+      <input type="text" id="urlInput" placeholder="Tempel URL video TikTok di sini...">
+    </div>
+    
+    <div class="button-group">
+      <button class="btn-secondary" onclick="pasteLink()">
+        <i class="fas fa-paste"></i>
+        <span>Tempel</span>
+      </button>
+      <button class="btn-secondary" onclick="deleteLink()">
+        <i class="fas fa-trash-alt"></i>
+        <span>Hapus</span>
+      </button>
+      <button class="btn-primary" onclick="download()">
+        <i class="fas fa-download"></i>
+        <span>Download</span>
+      </button>
+    </div>
+    
+    <div id="loading" style="display: none;">
+      <div class="spinner"></div>
+      <span>Sedang memproses video...</span>
+    </div>
+    
+    <div id="result"></div>
+  </div>
+  
+  <div class="footer">
+    &copy; Unduh video TikTok dengan cepat dan aman
+  </div>
+
+  <!-- Hidden video source element -->
+  <a id="videoSrc" href="#" download="tiktok-video.mp4"></a>
+
+  <script>
+    async function pasteLink() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('urlInput').value = text;
+      } catch (err) {
+        showAlert('Gagal mengakses clipboard!', 'error');
+      }
+    }
+
+    function deleteLink() {
+      document.getElementById('urlInput').value = '';
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('loading').style.display = 'none';
+    }
+    
+    function showAlert(message, type = 'error') {
+      const result = document.getElementById('result');
+      result.innerHTML = `
+        <div class="result-card">
+          <div class="result-title">
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle error' : 'check-circle success'}"></i>
+            <span>${type === 'error' ? 'Terjadi kesalahan' : 'Berhasil'}</span>
+          </div>
+          <p>${message}</p>
+        </div>
+      `;
+    }
+
+    async function download() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) {
+        return showAlert('Masukkan URL video TikTok terlebih dahulu!');
+      }
+      
+      if (!url.includes('tiktok.com')) {
+        return showAlert('URL tidak valid! Pastikan URL dari TikTok.');
+      }
+      
+      const loading = document.getElementById('loading');
+      const result = document.getElementById('result');
+      loading.style.display = 'flex';
+      result.innerHTML = '';
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        const res = await fetch('/api/tiktok', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        
+        const data = await res.json();
+        loading.style.display = 'none';
+
+        if (data.success) {
+          result.innerHTML = `
+            <div class="result-card">
+              <div class="result-title">
+                <i class="fas fa-check-circle success"></i>
+                <span>Video berhasil didapatkan</span>
+              </div>
+              <video id="videoPreview" controls src="${data.videoUrl}"></video>
+              <div class="download-options">
+                <div class="download-now" onclick="saveVideo('${data.videoUrl}', 'metode1')">
+                  <i class="fas fa-cloud-download-alt"></i>
+                  <span>Simpan Video (Metode 1)</span>
+                </div>
+                <div class="download-now download-alt" onclick="saveVideo('${data.videoUrl}', 'metode2')">
+                  <i class="fas fa-download"></i>
+                  <span>Simpan Video (Metode 2)</span>
+                </div>
+                <a class="download-now download-direct" href="${data.videoUrl}" download="tiktok-video-${new Date().getTime()}.mp4">
+                  <i class="fas fa-arrow-down"></i>
+                  <span>Download Langsung</span>
+                </a>
+              </div>
+            </div>
+          `;
+        } else {
+          showAlert(data.message || 'Gagal mengunduh video.', 'error');
+        }
+      } catch (error) {
+        console.error(error);
+        loading.style.display = 'none';
+        showAlert('Terjadi kesalahan saat mengunduh video. Silahkan coba lagi.', 'error');
+      }
+    }
+    
+    function saveVideo(url, method) {
+      if (method === 'metode1') {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tiktok-video-' + new Date().getTime() + '.mp4';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+        }, 100);
+      } else if (method === 'metode2') {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = blobUrl;
+            a.download = 'tiktok-video-paksa-' + new Date().getTime() + '.mp4';
+            document.body.appendChild(a);
+            a.click();
+            
+            window.URL.revokeObjectURL(blobUrl);
+            setTimeout(() => {
+              document.body.removeChild(a);
+            }, 100);
+          })
+          .catch(error => {
+            console.error('Error saat mengunduh video:', error);
+            showAlert('Gagal mengunduh video. Coba gunakan metode download lainnya.', 'error');
+          });
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const result = document.getElementById('result');
+      result.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'videoPreview') {
+          const video = e.target;
+          if (!video.onended) {
+            video.onended = function() {
+              if (confirm('Video selesai diputar. Ingin mendownload sekarang?')) {
+                const videoUrl = video.src;
+                saveVideo(videoUrl, 'metode2');
+              }
+            };
+          }
+        }
+      });
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const a = document.createElement('a');
+      if (typeof a.download === 'undefined') {
+        showAlert('Browser Anda mungkin tidak mendukung pengunduhan langsung. Silakan gunakan browser lain seperti Chrome atau Firefox.', 'warning');
+      }
+    });
+  </script>
+</body>
+</html>
